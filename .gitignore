@@ -1,0 +1,58 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.test
+.env.production
+
+# Logs
+logs
+*.log
+logs/**/*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build and cache
+dist/
+build/
+.cache/
+coverage/
+.tmp/
+
+# Jest
+coverage/
+jest-cache/
+jest-test-results.json
+
+# Uploads or temp files
+uploads/
+tmp/
+public/uploads/
+*.tmp
+
+# VS Code settings
+.vscode/
+
+# MongoDB data dumps
+dump/
+*.bson
+*.json
+
+# macOS system files
+Icon?
+.Spotlight-V100
+.Trashes
+._*
+
+# Optional: Docker and compose files if not used in repo
+docker-compose.override.yml
+docker-compose.dev.yml
+Dockerfile.dev
