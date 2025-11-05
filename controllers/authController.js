@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-const InvalidToken = require('../models/InvalidToken');
+const InvalidToken = require('../models/Invalid'); 
+const {sendSignupEmail} = require('../utils/mailer');
 
 const JWT_EXP = process.env.JWT_EXP || '7d';
 
@@ -12,26 +13,50 @@ function genToken(user) {
 exports.signup = async (req, res) => {
   try {
     const { email, password, phone, role } = req.body;
-    if (!email || !password || !phone || !role) return res.status(400).json({ message: 'Missing fields' });
-    if (!['recruiter','trainer'].includes(role)) return res.status(400).json({ message: 'Invalid role' });
+    if (!email || !password || !phone || !role)
+      return res.status(400).json({ message: 'Missing fields' });
+    if (!['recruiter', 'trainer'].includes(role))
+      return res.status(400).json({ message: 'Invalid role' });
 
-    const existing = await User.findOne({ $or: [{ email }, { phone }] });
-    if (existing) return res.status(400).json({ message: 'Email or phone already in use' });
+    let user = await User.findOne({ $or: [{ email }, { phone }] });
+    let message = '';
 
-    const user = new User({ email, password, phone, role });
-    await user.save();
+    const trimmedPassword = password.trim();
 
-    // create empty profile with mirrored email/phone
-    const profile = new Profile({ user: user._id, email, phone, verified: false });
-    await profile.save();
+    if (user) {
+      message = 'Email or phone already in use';
+    } else {
+      
+      user = new User({ email, password:trimmedPassword, phone, role });
+      await user.save();
 
+      
+      const profile = new Profile({ user: user._id, email, phone, verified: false });
+      await profile.save();
+
+      message = 'Signup successful';
+    }
+
+    
     const token = genToken(user);
-    res.status(201).json({ token, user: { id: user._id, email: user.email, phone: user.phone, role: user.role } });
+
+    
+    if (!user._wasExisting) {
+     const emailResponse = await sendSignupEmail(email);
+  console.log(emailResponse);
+    }
+
+    res.status(200).json({
+      token,
+      message,
+      user: { id: user._id, email: user.email, phone: user.phone, role: user.role }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Signup failed' });
   }
 };
+
 
 exports.signin = async (req, res) => {
   try {
@@ -39,9 +64,12 @@ exports.signin = async (req, res) => {
     if (!email || !password) return res.status(400).json({ message: 'Provide email and password' });
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-
-    const match = await user.comparePassword(password);
+    if (!user) {
+      console.warn('Login failed: email not found');
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+     console.log('User found:', user.password,password);
+    const match = await user.comparePassword(password.trim());
     if (!match) return res.status(401).json({ message: 'Invalid credentials' });
 
     // check profile verified flag

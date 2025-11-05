@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bankController = require('../controllers/bankController');
-const auth = require('../middleware/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/', auth, bankController.addAccount);
-router.get('/', auth, bankController.getAccounts);
-router.patch('/:id', auth, bankController.updateAccount);
-router.delete('/:id', auth, bankController.deleteAccount);
+router.post('/', authMiddleware, bankController.addAccount);
+router.get('/', authMiddleware, bankController.getAccounts);
+router.patch('/:id', authMiddleware, bankController.updateAccount);
+router.delete('/:id', authMiddleware, bankController.deleteAccount);
 
 module.exports = router;

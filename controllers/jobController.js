@@ -1,10 +1,13 @@
 const Job = require('../models/Job');
 const Earning = require('../models/Earning');
+const sendJobPostSuccessEmail= require('../utils/mailer').sendJobPostSuccessEmail;
 
 exports.createJob = async (req, res) => {
   try {
-    const { title, company, description, jobType, pricePerHour, qualification, applicationMethod, applicationUrl } = req.body;
+    const { title, company, description, jobType, pricePerHour, qualification, applicationMethod, applicationUrl,experienceLevel } = req.body;
     if (!title) return res.status(400).json({ message: 'Title required' });
+    
+    console.log(title)
 
     const job = new Job({
       owner: req.auth_id,
@@ -14,10 +17,15 @@ exports.createJob = async (req, res) => {
       jobType,
       pricePerHour,
       qualification,
+      experienceLevel,
       applicationMethod,
       applicationUrl
     });
     await job.save();
+
+    console.log('was successfull here')
+
+    // sendJobPostSuccessEmail(req.auth_email, job.title);
 
     // record earning: when job created (assume a listing fee)
     const listingFee = Number(process.env.JOB_LISTING_FEE || 0);

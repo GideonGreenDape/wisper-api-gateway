@@ -2,10 +2,26 @@ const express = require('express');
 const router = express.Router();
 const profileController = require('../controllers/profileController');
 const auth = require('../middleware/authMiddleware');
+const multer = require('multer');
+const path = require('path');
 
-router.get('/contact', auth, profileController.getEmailPhone); // GET email & phone
-router.get('/basic', auth, profileController.getBasicInfo); // GET firstname, lastname, email, phone
-router.patch('/', auth, profileController.updateProfile); // PATCH update profile records
-router.post('/photo', auth, profileController.uploadPhoto); // POST profile photo
+// Setup storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/profilePhotos'); // make sure folder exists
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
+router.post('/setup',auth, profileController.setupProfile);
+router.get('/contact', auth, profileController.getEmailPhone);
+router.get('/basic', auth, profileController.getBasicInfo);
+router.patch('/', auth, profileController.updateProfile);
+router.post('/photo', auth, upload.single('photo'), profileController.uploadPhoto);
 
 module.exports = router;

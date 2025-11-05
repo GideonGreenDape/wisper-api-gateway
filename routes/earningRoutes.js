@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const earningController = require('../controllers/earningController');
+const earningController = require('../controllers/earnignCotroller');
 const auth = require('../middleware/authMiddleware');
 
 router.post('/withdraw', auth, earningController.recordWithdrawal); // user posts a withdrawal

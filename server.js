@@ -13,12 +13,37 @@ const earningRoutes = require('./routes/earningRoutes');
 const bankRoutes = require('./routes/bankRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 
+
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
+
 connectDB();
 
-app.use(cors());
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // if you use cookies or sessions
+  })
+);
+
+
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const profilePhotosDir = path.join(__dirname, 'uploads/profilePhotos');
+if (!fs.existsSync(profilePhotosDir)) {
+  fs.mkdirSync(profilePhotosDir, { recursive: true });
+}
+
+
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);

@@ -8,6 +8,7 @@ const JobSchema = new mongoose.Schema({
   jobType: { type: String },
   pricePerHour: { type: Number },
   qualification: { type: String },
+  experienceLevel: { type: String },
   applicationMethod: { type: String }, // e.g. "url" or "email"
   applicationUrl: { type: String },
   createdAt: { type: Date, default: Date.now },
