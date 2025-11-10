@@ -134,7 +134,7 @@ async function sendSignupEmail(to, name = 'there') {
               <li>Start exploring Wisper today!</li>
             </ul>
             <p style="text-align: center;">
-              <a href="https://wisper.app" class="button">Go to Wisper</a>
+              <a href="http://wisperjobadmin.onrender.com/" class="button">Go to Wisper</a>
             </p>
             <p>If you ever need help, just reply to this email — we’ve got your back!</p>
           </div>

@@ -76,7 +76,8 @@ exports.signin = async (req, res) => {
     const profile = await Profile.findOne({ user: user._id });
     if (!profile) return res.status(400).json({ message: 'Profile missing' });
     if (!profile.verified) {
-      return res.status(403).json({ message: 'Profile not verified. Please verify OTP.' });
+      const token = genToken(user);
+      return res.status(403).json({ message: 'Profile not verified. Please verify OTP.', token: token });
     }
 
     const token = genToken(user);

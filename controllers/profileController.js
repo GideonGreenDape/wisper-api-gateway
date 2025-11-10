@@ -1,5 +1,7 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const fs = require('fs');
+const path = require('path');
 
 exports.getEmailPhone = async (req, res) => {
   // GET returns email and phone of logged-in user
@@ -13,34 +15,99 @@ exports.getEmailPhone = async (req, res) => {
 };
 
 exports.getBasicInfo = async (req, res) => {
-  // GET returns firstname, lastname, email, phone
-  try {
-    const profile = await Profile.findOne({ user: req.user_id });
+ try {
+    const profile = await Profile.findOne({ user: req.auth_id });
     if (!profile) return res.status(404).json({ message: 'Profile not found' });
     res.json({
       firstName: profile.firstName,
       lastName: profile.lastName,
       email: profile.email,
-      phone: profile.phone
+      phone: profile.phone,
+      industry: profile.industry,
+      businessName: profile.businessName,
+      profilePhoto: profile.profilePhoto
     });
   } catch (err) {
     res.status(500).json({ message: 'Error' });
+  } 
+};
+
+
+exports.deletePhoto = async (req, res) => {
+  console.log('here got  hit! ')
+  try {
+   
+    const profile = await Profile.findOne({ user: req.auth_id });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    if (!profile.profilePhoto) {
+      return res.status(400).json({ message: 'No profile photo to delete' });
+    }
+
+    
+    const filePath = path.join(__dirname, `../..${profile.profilePhoto}`);
+
+    
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      console.log(' Deleted local profile photo:', filePath);
+    } else {
+      console.log(' File not found locally:', filePath);
+    }
+
+  
+    profile.profilePhoto = null;
+    profile.updatedAt = new Date();
+    await profile.save();
+
+    res.json({
+      success: true,
+      message: 'Profile photo deleted successfully',
+      profile,
+    });
+  } catch (err) {
+    console.error(' Error deleting profile photo:', err);
+    res.status(500).json({ message: 'Error deleting profile photo' });
   }
 };
 
 exports.updateProfile = async (req, res) => {
-  // PATCH update profile fields including businessName, firstName, lastName, industry
   try {
-    console.log(req.body);
     const { businessName, firstName, lastName, industry } = req.body;
+
+    
+    const updateData = {
+      businessName,
+      firstName,
+      lastName,
+      industry,
+      updatedAt: new Date(),
+    };
+
+    
+    if (req.file) {
+      const photoUrl = `/uploads/profilePhotos/${req.file.filename}`;
+      updateData.profilePhoto = photoUrl;
+    }
+
     const profile = await Profile.findOneAndUpdate(
-      { user: req.user_id },
-      { businessName, firstName, lastName, industry, updatedAt: new Date() },
+      { user: req.auth_id },
+      updateData,
       { new: true, omitUndefined: true }
     );
+
     if (!profile) return res.status(404).json({ message: 'Profile not found' });
-    res.json(profile);
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      profile,
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Error updating profile' });
   }
 };
