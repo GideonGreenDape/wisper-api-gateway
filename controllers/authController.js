@@ -88,6 +88,23 @@ exports.signin = async (req, res) => {
   }
 };
 
+exports.googleCallbackHandler = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(400).json({ message: "Google auth failed" });
+
+    const token = genToken(user);
+    res.status(200).json({
+      token,
+      message: "Google sign-in successful",
+      user: { id: user._id, email: user.email, role: user.role },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Google login failed" });
+  }
+};
+
 exports.logout = async (req, res) => {
   try {
     const token = req.token;

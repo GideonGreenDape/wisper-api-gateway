@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const passport = require('passport');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
@@ -19,7 +20,11 @@ const path = require('path');
 
 const app = express();
 
+
 connectDB();
+
+require('./config/passport'); 
+app.use(passport.initialize())
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
@@ -29,7 +34,7 @@ app.use(
     origin: FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // if you use cookies or sessions
+    credentials: true, 
   })
 );
 
