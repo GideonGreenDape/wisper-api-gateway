@@ -10,7 +10,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
         process.env.NODE_ENV === "production"
-          ? "https://wisperonline.com/api/auth/google/callback"
+          ? "https://wisper-api-gateway.onrender.com/api/auth/google/callback"
           : "http://localhost:5000/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
