@@ -12,7 +12,7 @@ const getOAuthClient = () => {
     process.env.GMAIL_CLIENT_ID,
     process.env.GMAIL_CLIENT_SECRET,
     process.env.NODE_ENV === 'production'
-      ? 'https://wisperonline.com/api/auth/gmail/callback'
+      ? 'https://wisper-api-gateway.onrender.com/api/auth/gmail/callback'
       : 'http://localhost:5000/api/auth/gmail/callback'
   );
 };
