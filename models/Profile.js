@@ -6,11 +6,10 @@ const ProfileSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   email: { type: String, required: true },
-  phone: { type: String, required: true },
+  phone: { type: String, required: false },
   verified: { type: Boolean, default: false },
   profilePhoto: String,
   industry: String
 }, { timestamps: true });
-
 
 module.exports = mongoose.model('Profile', ProfileSchema);
