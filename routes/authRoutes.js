@@ -23,6 +23,6 @@ router.get(
 router.get('/consent-url', getConsentUrl);
 
 
-router.get('/callback', gmailCallback);
+router.get('/gmail/callback', gmailCallback);
 
 module.exports = router;
