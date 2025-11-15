@@ -22,7 +22,7 @@ passport.use(
 
        
         if (!user) {
-          const role = "trainer"; 
+          const role = "recruiter"; 
           user = await User.create({
             email,
             password: null, 
