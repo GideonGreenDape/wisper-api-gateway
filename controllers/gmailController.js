@@ -11,9 +11,7 @@ const getOAuthClient = () => {
   return new google.auth.OAuth2(
     process.env.GMAIL_CLIENT_ID,
     process.env.GMAIL_CLIENT_SECRET,
-    process.env.NODE_ENV === 'production'
-      ? 'https://wisper-api-gateway.onrender.com/api/auth/gmail/callback'
-      : 'http://localhost:5000/api/auth/gmail/callback'
+   'https://wisper-api-gateway.onrender.com/api/auth/gmail/callback'
   );
 };
 
