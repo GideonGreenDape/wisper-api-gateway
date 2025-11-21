@@ -18,23 +18,24 @@ passport.use(
         let user = await User.findOne({ email });
 
        
-        if (!user) {
-          const role = "recruiter"; 
-          user = await User.create({
-            email,
-            password: null, 
-            phone: null,
-            role,
-            googleId: profile.id,
-          });
+      if (!user) {
+  const role = "recruiter"; 
+  user = await User.create({
+    email,
+    password: null,
+    phone: "+0000000000",  
+    role,
+    googleId: profile.id,
+  });
 
-          const profileDoc = new Profile({
-            user: user._id,
-            email,
-            verified: true, 
-          });
-          await profileDoc.save();
-        }
+  let profileDoc = await Profile.create({
+    user: user._id,
+    email,
+    verified: true,
+    phone: "+0000000000"  
+  });
+}
+
 
         return done(null, user);
       } catch (err) {
