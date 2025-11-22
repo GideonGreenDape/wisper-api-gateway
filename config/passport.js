@@ -11,43 +11,40 @@ passport.use(
       callbackURL: "https://wisper-api-gateway.onrender.com/api/auth/google/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
-      try {
-        const email = profile.emails?.[0]?.value;
-        if (!email) return done(null, false, { message: "No email from Google" });
+  try {
+    const email = profile.emails?.[0]?.value;
+    if (!email) return done(null, false, { message: "No email from Google" });
 
-        let user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
+    if (!user) {
+      const role = "recruiter";
+      user = await User.create({
+        email,
+        password: null,
+        phone: "+0000000000",
+        role,
+        googleId: profile.id,
+      });
 
-        if (!user) {
-          const role = "recruiter";
-          user = await User.create({
-            email,
-            password: null,
-            phone: "+0000000000",
-            role,
-            googleId: profile.id,
-          });
+     
+      let dbProfile = await Profile.findOne({ user: user._id });
 
-          let profile = await Profile.findOne({ user: user._id });
-
-
-          if (!profile) {
-            await Profile.create({
-              user: user._id,
-              email,
-              verified: true,
-              phone: "+0000000000"
-            });
-
-          }
-
-        }
-
-
-        return done(null, user);
-      } catch (err) {
-        return done(err, false);
+      if (!dbProfile) {
+        await Profile.create({
+          user: user._id,
+          email,
+          verified: true,
+          phone: "+0000000000"
+        });
       }
     }
+
+    return done(null, user);
+  } catch (err) {
+    return done(err, false);
+  }
+}
+
   )
 );
