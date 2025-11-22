@@ -47,11 +47,8 @@ const sendGmailMessage = async ({ to, subject, html }) => {
   return result.data;
 };
 
-exports.sendOtpEmail = async (req, res) => {
+exports.sendOtpEmail = async ({ to,code}) => {
   try {
-    const { to, code } = req.body;
-    if (!to || !code) return res.status(400).json({ message: 'Missing parameters' });
-
     const html = generateEmailTemplate({
       title: 'Wisper Verification Code',
       body: `
