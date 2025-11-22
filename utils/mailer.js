@@ -71,6 +71,25 @@ exports.sendOtpEmail = async (req, res) => {
   }
 };
 
+exports.sendSignupEmailInternal = async ({ to, name = 'there' }) => {
+  try {
+    const html = generateEmailTemplate({
+      title: 'Welcome to Wisper!',
+      body: `
+        <p>Hi ${name},</p>
+        <p>We’re thrilled to have you join <strong>Wisper</strong> — start exploring today!</p>
+      `,
+      buttonText: 'Go to Wisper',
+      buttonUrl: 'https://wisperonline.com/signin'
+    });
+
+    return await sendGmailMessage({ to, subject: 'Welcome to Wisper', html });
+  } catch (err) {
+    console.error('Internal mail send failed:', err);
+    return null;
+  }
+};
+
 exports.sendSignupEmail = async (req, res) => {
   try {
     const { to, name = 'there' } = req.body;

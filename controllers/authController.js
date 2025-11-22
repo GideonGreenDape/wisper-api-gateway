@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 const InvalidToken = require('../models/Invalid'); 
-const {sendSignupEmail} = require('../utils/mailer');
+const {sendSignupEmail, sendSignupEmailInternal} = require('../utils/mailer');
 
 const JWT_EXP = process.env.JWT_EXP || '7d';
 
@@ -42,7 +42,7 @@ exports.signup = async (req, res) => {
 
     
     if (!user._wasExisting) {
-     const emailResponse = await sendSignupEmail(email);
+     const emailResponse = await sendSignupEmailInternal({ to: email });
   console.log(emailResponse);
     }
 
@@ -101,7 +101,7 @@ exports.googleCallbackHandler = async (req, res) => {
     let userCheck = await User.findOne({ $or: [{ email }, { phone }] });
 
      if (!userCheck._wasExisting) {
-     const emailResponse = await sendSignupEmail(email);
+     const emailResponse = await sendSignupEmailInternal({to:email});
   console.log(emailResponse);
     }
 
