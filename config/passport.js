@@ -35,7 +35,6 @@ passport.use(
         await Profile.create({
           user: user._id,
           email,
-          verified: true,
           phone: "+0000000000"
         });
       }
