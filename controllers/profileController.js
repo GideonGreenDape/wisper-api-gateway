@@ -25,7 +25,8 @@ exports.getBasicInfo = async (req, res) => {
       phone: profile.phone,
       industry: profile.industry,
       businessName: profile.businessName,
-      profilePhoto: profile.profilePhoto
+      profilePhoto: profile.profilePhoto,
+      verified: profile.verified
     });
   } catch (err) {
     res.status(500).json({ message: 'Error' });
