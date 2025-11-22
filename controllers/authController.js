@@ -95,6 +95,16 @@ exports.googleCallbackHandler = async (req, res) => {
 
     const token = genToken(user);
 
+    let email = user.email;
+    let phone= user.phone
+
+    let userCheck = await User.findOne({ $or: [{ email }, { phone }] });
+
+     if (!userCheck._wasExisting) {
+     const emailResponse = await sendSignupEmail(email);
+  console.log(emailResponse);
+    }
+
     
     const redirectUrl = `https://wisperonline.com/auth/google/callback?token=${token}&email=${encodeURIComponent(
       user.email

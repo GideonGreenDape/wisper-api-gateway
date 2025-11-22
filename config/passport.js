@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:"https://wisper-api-gateway.onrender.com/api/auth/google/callback"
+      callbackURL: "https://wisper-api-gateway.onrender.com/api/auth/google/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -17,24 +17,31 @@ passport.use(
 
         let user = await User.findOne({ email });
 
-       
-      if (!user) {
-  const role = "recruiter"; 
-  user = await User.create({
-    email,
-    password: null,
-    phone: "+0000000000",  
-    role,
-    googleId: profile.id,
-  });
 
-  let profileDoc = await Profile.create({
-    user: user._id,
-    email,
-    verified: true,
-    phone: "+0000000000"  
-  });
-}
+        if (!user) {
+          const role = "recruiter";
+          user = await User.create({
+            email,
+            password: null,
+            phone: "+0000000000",
+            role,
+            googleId: profile.id,
+          });
+
+          let profile = await Profile.findOne({ user: user._id });
+
+
+          if (!profile) {
+            await Profile.create({
+              user: user._id,
+              email,
+              verified: true,
+              phone: "+0000000000"
+            });
+
+          }
+
+        }
 
 
         return done(null, user);
