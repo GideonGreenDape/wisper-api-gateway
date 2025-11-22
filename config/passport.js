@@ -29,6 +29,7 @@ passport.use(
 
      
       let dbProfile = await Profile.findOne({ user: user._id });
+      console.log('from google auth signup process' ,dbProfile)
 
       if (!dbProfile) {
         await Profile.create({
