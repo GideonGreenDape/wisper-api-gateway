@@ -61,10 +61,10 @@ exports.sendOtpEmail = async ({ to,code}) => {
     });
 
     const result = await sendGmailMessage({ to, subject: 'Your OTP Code - Wisper', html });
-    res.json({ message: 'OTP sent', result });
+    return { message: 'OTP sent', result };
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Failed to send OTP', error: err.message });
+   return { message: 'Failed to send OTP', error: err.message };
   }
 };
 
