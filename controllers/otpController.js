@@ -15,7 +15,7 @@ exports.sendOtp = async (req, res) => {
 
     await Otp.create({ user: req.auth_id, code, expiresAt });
 
-    await sendOtpEmail(profile.email, code);
+    await sendOtpEmail({to:profile.email, code: code});
 
     console.log('otpsent to:', profile.email)
 
