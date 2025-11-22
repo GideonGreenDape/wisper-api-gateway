@@ -16,7 +16,7 @@ const generateEmailTemplate = ({
   body,
   buttonText,
   buttonUrl,
-  logoPath = path.join(__dirname, '../assets/logos/wisper.svg'),
+  logoPath = path.join(__dirname, '../assets/logos/wisper.png'),
 }) => {
   let logoBase64 = '';
   try {

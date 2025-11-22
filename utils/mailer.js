@@ -16,7 +16,6 @@ const getOAuthClient = (refreshToken) => {
 
 
 const sendGmailMessage = async ({ to, subject, html }) => {
-  // Fetch the platform Gmail token from DB (assume single record)
   const gmailToken = await GmailToken.findOne({});
   if (!gmailToken || !gmailToken.refresh_token) {
     throw new Error('Gmail token not found in DB');
@@ -25,7 +24,7 @@ const sendGmailMessage = async ({ to, subject, html }) => {
   const oauth2Client = getOAuthClient(gmailToken.refresh_token);
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
 
-  // Build raw email
+  
   let raw = `From: "Wisper" <${process.env.GMAIL_USER}>\r\n`;
   raw += `To: ${to}\r\n`;
   raw += `Subject: ${subject}\r\n`;
