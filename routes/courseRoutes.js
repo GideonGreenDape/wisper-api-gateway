@@ -8,7 +8,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/profilePhotos'); 
+    cb(null, 'uploads/courseImages');
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-router.post('/', auth,upload.single('photo'), courseController.createCourse);
+router.post('/', auth,upload.single('image'), courseController.createCourse);
 router.get('/', auth, courseController.getCourses);
 router.patch('/:id', auth, courseController.updateCourse);
 
