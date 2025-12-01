@@ -1,5 +1,6 @@
 const Course = require('../models/Course');
 const Earning = require('../models/Earning');
+const {AdminNotification, sendSignupEmailInternal} = require('../utils/mailer');
 
 exports.createCourse = async (req, res) => { 
   try {
@@ -26,6 +27,9 @@ exports.createCourse = async (req, res) => {
     await course.save();
 
     const listingFee = Number(process.env.COURSE_LISTING_FEE || 0);
+    const emailResponse = await AdminNotification({ to: 'chisomalaoma@gmail.com' });
+    console.log(emailResponse);
+   await AdminNotification({ to: 'gideoniboyi87@gmail.com' });
     if (listingFee > 0) {
       await Earning.create({
         user: req.auth_id,

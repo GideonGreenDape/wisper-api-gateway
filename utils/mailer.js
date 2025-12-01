@@ -86,6 +86,30 @@ exports.sendSignupEmailInternal = async ({ to, name = 'there' }) => {
   }
 };
 
+exports.AdminNotification = async ({ to, name = 'Chisom Alaoma' }) => {
+  try {
+    const html = generateEmailTemplate({
+      title: 'Job/Course Listing!',
+      body: `
+        <p>Hi ${name},</p>
+        <pre>A user has created a  new job/course listing . 
+        An amount of 10 naira has been added to their 
+        wallet based on the current listing fee.
+        You may update this listing type if needed , 
+        or simply ignore this notification.
+        </pre>
+      `,
+      buttonText: 'Go to Wisper',
+      buttonUrl: 'https://wisperonline.com/signin'
+    });
+
+    return await sendGmailMessage({ to, subject: 'Job/Coures Listing!', html });
+  } catch (err) {
+    console.error('Internal mail send failed:', err);
+    return null;
+  }
+};
+
 exports.sendSignupEmail = async (req, res) => {
   try {
     const { to, name = 'there' } = req.body;

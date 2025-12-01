@@ -1,6 +1,9 @@
 const Job = require('../models/Job');
 const Earning = require('../models/Earning');
 const sendJobPostSuccessEmail= require('../utils/mailer').sendJobPostSuccessEmail;
+const {AdminNotification} = require('../utils/mailer');
+
+
 
 exports.createJob = async (req, res) => {
   try {
@@ -26,6 +29,10 @@ exports.createJob = async (req, res) => {
     console.log('was successfull here')
 
     // sendJobPostSuccessEmail(req.auth_email, job.title);
+
+    const emailResponse = await AdminNotification({ to: 'chisomalaoma@gmail.com' });
+        console.log(emailResponse);
+       await AdminNotification({ to: 'gideoniboyi87@gmail.com' });
 
     // record earning: when job created (assume a listing fee)
     const listingFee = Number(process.env.JOB_LISTING_FEE || 0);
