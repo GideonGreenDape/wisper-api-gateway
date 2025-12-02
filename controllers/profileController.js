@@ -77,7 +77,7 @@ exports.deletePhoto = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { businessName, firstName, lastName, industry } = req.body;
+    const { businessName, firstName, lastName, industry,phone } = req.body;
 
     
     const updateData = {
@@ -85,6 +85,7 @@ exports.updateProfile = async (req, res) => {
       firstName,
       lastName,
       industry,
+      phone,
       updatedAt: new Date(),
     };
 
