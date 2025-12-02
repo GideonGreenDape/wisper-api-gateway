@@ -47,7 +47,7 @@ if (!fs.existsSync(profilePhotosDir)) {
   fs.mkdirSync(profilePhotosDir, { recursive: true });
 }
 
-=
+
 const courseImagesDir = path.join(__dirname, 'uploads/courseImages');
 if (!fs.existsSync(courseImagesDir)) {
   console.log(`Creating directory: ${courseImagesDir}`);
